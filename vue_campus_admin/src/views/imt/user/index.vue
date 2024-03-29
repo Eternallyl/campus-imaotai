@@ -223,7 +223,7 @@
       >
         <template slot-scope="scope">
           <span>{{
-              scope.row.shopType == 1 ? "预约出货量最大门店" : "预约附近门店"
+              scope.row.shopType == 1 ? "预约出货量最大门店" : scope.row.shopType == 2 ? "预约附近门店" : "预约指定门店"
             }}</span>
         </template>
       </el-table-column>
@@ -523,15 +523,15 @@
 
 <script>
 import {
-  listUser,
-  getUser,
-  delUser,
   addUser,
-  updateUser,
-  sendCode,
+  delUser,
+  getUser,
+  listUser,
   login,
   reservation,
+  sendCode,
   travelReward,
+  updateUser,
 } from "@/api/imt/user";
 
 import {listItem} from "@/api/imt/item";
