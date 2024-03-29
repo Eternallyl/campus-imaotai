@@ -203,7 +203,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
     }
 
     @Override
-    public String getShopId(int shopType, String itemId, String province, String city, String lat, String lng) {
+    public String getShopId(int shopType, String itemId, String province, String city, String lat, String lng, String iShopId) {
         //查询所在省市的投放产品和数量
         List<IMTItemInfo> shopList = getShopsByProvince(province, itemId);
         //取id集合
@@ -221,9 +221,17 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
                 //本市没有则预约本省最近的
                 shopId = getMinDistanceShopId(list, province, lat, lng);
             }
-        } else {
+        } else if (shopType == 2) {
             //预约本省距离最近的门店
             shopId = getMinDistanceShopId(list, province, lat, lng);
+        } else {
+            // 指定门店(不放货则不预约)
+            long count = list.stream().filter(i -> i.getIShopId().equals(iShopId)).count();
+            if (count > 0) {
+                shopId = iShopId;
+            } else {
+                throw new ServiceException("指定门店当日无预约活动！");
+            }
         }
 
 //        if (shopType == 2) {

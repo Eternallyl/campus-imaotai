@@ -13,7 +13,6 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.oddfar.campus.business.api.PushPlusApi;
 import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.business.mapper.IUserMapper;
 import com.oddfar.campus.business.service.IMTLogFactory;
@@ -23,7 +22,6 @@ import com.oddfar.campus.business.service.IUserService;
 import com.oddfar.campus.common.core.RedisCache;
 import com.oddfar.campus.common.exception.ServiceException;
 import com.oddfar.campus.common.utils.StringUtils;
-import com.oddfar.campus.framework.manager.AsyncManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +32,7 @@ import javax.annotation.PostConstruct;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -210,7 +204,7 @@ public class IMTServiceImpl implements IMTService {
             while (retryCount < 3 && !reservationSuccess) {
                 try {
                     String shopId = iShopService.getShopId(iUser.getShopType(), itemId,
-                            iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng());
+                            iUser.getProvinceName(), iUser.getCityName(), iUser.getLat(), iUser.getLng(), iUser.getIshopId());
                     // 预约
                     JSONObject json = reservation(iUser, itemId, shopId);
                     logContent += String.format("[预约项目]：%s\n[shopId]：%s\n[结果返回]：%s\n\n", itemId, shopId, json.toString());
@@ -231,6 +225,7 @@ public class IMTServiceImpl implements IMTService {
                      */
                     if (e.getMessage().contains("申购已结束")
                             || e.getMessage().contains("今天已申购")
+                            || e.getMessage().contains("指定门店当日无预约活动")
                             || e.getMessage().contains("实名信息未完善")) {
                         break;
                     }
@@ -281,8 +276,9 @@ public class IMTServiceImpl implements IMTService {
         new Thread(runnable).start();
 
     }
+
     // 领取小茅运
-    public void receiveReward(IUser iUser){
+    public void receiveReward(IUser iUser) {
         String url = "https://h5.moutai519.com.cn/game/xmTravel/receiveReward";
         HttpRequest request = HttpUtil.createRequest(Method.POST, url);
 
@@ -296,14 +292,14 @@ public class IMTServiceImpl implements IMTService {
         HttpResponse execute = request.execute();
         JSONObject body = JSONObject.parseObject(execute.body());
 
-        if(body.getInteger("code") != 2000){
+        if (body.getInteger("code") != 2000) {
             String message = "领取小茅运失败";
             throw new ServiceException(message);
         }
     }
 
-    public void shareReward(IUser iUser){
-        logger.info("「领取每日首次分享获取耐力」："+iUser.getMobile());
+    public void shareReward(IUser iUser) {
+        logger.info("「领取每日首次分享获取耐力」：" + iUser.getMobile());
         String url = "https://h5.moutai519.com.cn/game/xmTravel/shareReward";
         HttpRequest request = HttpUtil.createRequest(Method.POST, url);
 
@@ -317,7 +313,7 @@ public class IMTServiceImpl implements IMTService {
         HttpResponse execute = request.execute();
         JSONObject body = JSONObject.parseObject(execute.body());
 
-        if(body.getInteger("code") != 2000){
+        if (body.getInteger("code") != 2000) {
             String message = "领取每日首次分享获取耐力失败";
             throw new ServiceException(message);
         }
@@ -601,7 +597,7 @@ public class IMTServiceImpl implements IMTService {
                     throw new ServiceException(message);
                 }
                 JSONArray itemVOs = jsonObject.getJSONObject("data").getJSONArray("reservationItemVOS");
-                if(Objects.isNull(itemVOs) || itemVOs.isEmpty()){
+                if (Objects.isNull(itemVOs) || itemVOs.isEmpty()) {
                     logger.info("申购记录为空: user->{}", iUser.getMobile());
                     continue;
                 }
@@ -614,7 +610,7 @@ public class IMTServiceImpl implements IMTService {
                     }
                 }
             } catch (Exception e) {
-                logger.error("查询申购结果失败:失败原因->{}", e.getMessage(),e);
+                logger.error("查询申购结果失败:失败原因->{}", e.getMessage(), e);
             }
 
         }

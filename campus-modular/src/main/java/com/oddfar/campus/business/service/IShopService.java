@@ -36,13 +36,14 @@ public interface IShopService extends IService<IShop> {
     List<IMTItemInfo> getShopsByProvince(String province, String itemId);
 
     /**
-     * @param shopType 1：预约本市出货量最大的门店，2：预约你的位置附近门店
+     * @param shopType 1：预约本市出货量最大的门店，2：预约你的位置附近门店；3：指定门店(不放货则不预约)
      * @param itemId   项目id即预约项目code
      * @param province 省份，例如：河北省，北京市
      * @param city     市：例如石家庄市
+     * @param iShopId  门店id
      * @return
      */
-    String getShopId(int shopType, String itemId, String province, String city, String lat, String lng);
+    String getShopId(int shopType, String itemId, String province, String city, String lat, String lng, String iShopId);
 
 
 }

@@ -11,7 +11,10 @@ import com.oddfar.campus.common.utils.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * I茅台用户对象 i_user
@@ -97,7 +100,7 @@ public class IUser extends BaseEntity {
     private String randomMinute;
 
     /**
-     * 类型(1：预约本市出货量最大的门店，2：预约你的位置附近门店)
+     * 类型(1：预约本市出货量最大的门店，2：预约你的位置附近门店)指，3：指定门店(不放货则不预约)
      */
     private int shopType;
 

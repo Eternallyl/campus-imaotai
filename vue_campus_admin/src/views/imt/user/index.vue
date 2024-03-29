@@ -603,6 +603,10 @@ export default {
           value: 2,
           label: "预约你的位置(经纬度)附近门店",
         },
+        {
+          value: 3,
+          label: "指定门店(不放货则不预约)",
+        },
       ],
       // I茅台预约商品列表格数据
       itemList: [],
