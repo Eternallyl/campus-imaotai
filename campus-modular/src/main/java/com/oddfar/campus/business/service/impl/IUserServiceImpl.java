@@ -94,7 +94,7 @@ public class IUserServiceImpl implements IUserService {
         Long userCount = iUserMapper.selectCount();
         if (userCount > 60) {
             iUserMapper.updateUserMinuteEven();
-        }else {
+        } else {
             iUserMapper.updateUserMinuteBatch();
         }
     }

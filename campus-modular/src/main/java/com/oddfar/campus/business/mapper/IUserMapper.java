@@ -4,6 +4,7 @@ import com.oddfar.campus.business.entity.IUser;
 import com.oddfar.campus.common.core.BaseMapperX;
 import com.oddfar.campus.common.core.LambdaQueryWrapperX;
 import com.oddfar.campus.common.domain.PageResult;
+import com.oddfar.campus.common.utils.DateUtils;
 import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
@@ -57,12 +58,13 @@ public interface IUserMapper extends BaseMapperX<IUser> {
      */
     default List<IUser> selectReservationUserByMinute(int minute) {
         return selectList(new LambdaQueryWrapperX<IUser>()
-                        .eq(IUser::getMinute, minute)
-//                      .gt(IUser::getExpireTime, new Date())
-                        .ne(IUser::getLat, "")
-                        .ne(IUser::getLng, "")
-                        .ne(IUser::getItemCode, "")
-                        .isNotNull(IUser::getItemCode)
+                .eq(IUser::getMinute, minute)
+                //失效时间大于等于今天的
+                .ge(IUser::getExpireTime, DateUtils.getNowDate())
+                .ne(IUser::getLat, "")
+                .ne(IUser::getLng, "")
+                .ne(IUser::getItemCode, "")
+                .isNotNull(IUser::getItemCode)
         );
     }
 

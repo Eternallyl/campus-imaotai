@@ -221,10 +221,7 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
                 //本市没有则预约本省最近的
                 shopId = getMinDistanceShopId(list, province, lat, lng);
             }
-        } else if (shopType == 2) {
-            //预约本省距离最近的门店
-            shopId = getMinDistanceShopId(list, province, lat, lng);
-        } else {
+        } else if (shopType == 3) {
             // 指定门店(不放货则不预约)
             long count = list.stream().filter(i -> i.getIShopId().equals(iShopId)).count();
             if (count > 0) {
@@ -232,6 +229,9 @@ public class IShopServiceImpl extends ServiceImpl<IShopMapper, IShop> implements
             } else {
                 throw new ServiceException("指定门店当日无预约活动！");
             }
+        } else {
+            //预约本省距离最近的门店
+            shopId = getMinDistanceShopId(list, province, lat, lng);
         }
 
 //        if (shopType == 2) {
