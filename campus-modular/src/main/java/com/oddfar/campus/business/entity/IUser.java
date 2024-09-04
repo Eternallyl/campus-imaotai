@@ -105,6 +105,11 @@ public class IUser extends BaseEntity {
     private int shopType;
 
     /**
+     * 推送类型：1-push_plus
+     */
+    private int pushType;
+
+    /**
      * push_plus_token
      */
     private String pushPlusToken;

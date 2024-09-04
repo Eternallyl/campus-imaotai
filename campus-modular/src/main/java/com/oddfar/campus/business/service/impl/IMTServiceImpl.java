@@ -227,6 +227,7 @@ public class IMTServiceImpl implements IMTService {
                     if (e.getMessage().contains("申购已结束")
                             || e.getMessage().contains("今天已申购")
                             || e.getMessage().contains("指定门店当日无预约活动")
+                            || e.getMessage().contains("token expired")
                             || e.getMessage().contains("实名信息未完善")) {
                         break;
                     }

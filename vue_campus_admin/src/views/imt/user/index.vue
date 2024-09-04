@@ -298,7 +298,7 @@
     />
 
     <!-- 添加或修改I茅台用户对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
+    <el-dialog :title="title" :visible.sync="open" width="680px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item v-if="toAdd != 1" label="手机号" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入I茅台用户手机号"/>
@@ -426,6 +426,37 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
+            <el-form-item label="到期时间" prop="expireTime">
+              <el-date-picker
+                v-model="form.expireTime"
+                type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                placeholder="选择日期时间"
+              >
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <!-- <el-form-item label="完整地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入完整地址" />
+        </el-form-item> -->
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="推送类型" prop="pushType">
+              <el-select v-model="form.pushType" placeholder="请选择">
+                <el-option
+                  v-for="item in pushType"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
             <el-form-item label="推送token" prop="pushPlusToken">
               <el-input
                 v-model="form.pushPlusToken"
@@ -435,19 +466,6 @@
           </el-col>
         </el-row>
 
-        <!-- <el-form-item label="完整地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入完整地址" />
-        </el-form-item> -->
-
-        <el-form-item label="到期时间" prop="expireTime">
-          <el-date-picker
-            v-model="form.expireTime"
-            type="datetime"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="选择日期时间"
-          >
-          </el-date-picker>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -607,6 +625,12 @@ export default {
           value: 3,
           label: "指定门店(不放货则不预约)",
         },
+      ],
+      pushType: [
+        {
+          value: 1,
+          label: "pushPlus",
+        }
       ],
       // I茅台预约商品列表格数据
       itemList: [],
