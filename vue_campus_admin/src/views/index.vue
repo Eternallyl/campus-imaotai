@@ -8,7 +8,7 @@
     </p>
     <!-- 教程链接 -->
     <div class="tutorial-link">
-      <p>查看教程文档，请访问：<a href="https://richy-help.daijc.cn/imaotai_auto.html" target="_blank">打开教程</a></p>
+      <p>查看教程文档，请访问：<a href="https://blog.daijc.cn/post/3" target="_blank">打开教程</a></p>
     </div>
     <p></p>
 <!--    <el-card class="box-card">
